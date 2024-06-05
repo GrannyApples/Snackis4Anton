@@ -1,0 +1,102 @@
+﻿@page "{id}"
+@model Snackis4Anton.Pages.Posts.PostDetailsModel
+@{
+    ViewData["Title"] = Model.Post.Title;
+}
+<h1>@Model.Post.Title</h1>
+@if (!string.IsNullOrEmpty(Model.Post.Image))
+{
+    <img width="100" length="100" src="/images/@Model.Post.Image" alt="Post Image" style="max-width: 100%;" />
+}
+<p>@Model.Post.Text</p>
+<div class="mb-3">
+    <div class="btn-group mb-3" role="group">
+        @if(!Model.Post.IsReported){
+        <form method="post" asp-page-handler="ReportPost">
+            <input type="hidden" name="postId" value="@Model.Post.Id" />
+            <button type="submit" class="btn btn-warning">Report Post</button>
+        </form>
+        }
+        @if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || User.Identity.Name == Model.Post.Author))
+        {
+            <a asp-page="/Posts/Edit" asp-route-id="@Model.Post.Id" class="btn btn-primary">Edit Post</a>
+            <form method="post" asp-page-handler="DeletePost" onsubmit="return confirm('Are you sure you want to delete this post?');">
+                <input type="hidden" name="postId" value="@Model.Post.Id" />
+                <button type="submit" class="btn btn-danger">Delete Post</button>
+            </form>
+}
+        </div>
+</div>
+<h2>Comments</h2>
+<ul>
+    @foreach (var comment in Model.Post.Comments)
+    {
+        <li class="mb-3">
+            <p>@comment.Author: @comment.Text</p>
+            <div class="btn-group mb-2" role="group">
+                @if (!Model.Post.IsReported)
+                {
+                    <form method="post" asp-page-handler="ReportComment">
+                        <input type="hidden" name="commentId" value="@comment.Id" />
+                        <button type="submit" class="btn btn-warning ">Report</button>
+                    </form>
+                }
+            @if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || User.Identity.Name == comment.Author))
+            {
+                <a asp-page="/Comments/Edit" asp-route-id="@comment.Id" class="btn btn-primary mb-2">Edit</a>
+                <form method="post" asp-page-handler="DeleteComment">
+                    <input type="hidden" name="id" value="@comment.Id" />
+                    <button type="submit" class="btn btn-danger btn-block mb-2">Delete</button>
+                </form>
+            }
+            
+            </div>
+        </li>
+    }
+</ul>
+
+@if (User.Identity.IsAuthenticated)
+{
+    <form method="post">
+        <input type="hidden" asp-for="NewComment.PostId" value="@Model.Post.Id" />
+        <div class="form-group">
+            <label asp-for="NewComment.Text"></label>
+            <textarea asp-for="NewComment.Text" class="form-control"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Add Comment</button>
+    </form>
+}
+@* 
+
+<p>@Model.Post.Text</p>
+<p>By: <a asp-page="/Users/Details" asp-route-id="@Model.Post.UserId">@Model.Post.Author</a></p>
+<p>@Model.Post.CreateDate</p>
+
+<h2>Comments</h2>
+<ul>
+    @foreach (var comment in Model.Comments)
+    {
+        
+        <li class="card m-2">
+            <p>@comment.Text</p>
+            <p>By: <a asp-page="/Users/Details" asp-route-id="@comment.UserId">@comment.Author</a> on @comment.CreateDate</p>
+        </li>
+        
+    }
+</ul>
+
+<h3>Add a Comment</h3>
+@if (User.Identity.IsAuthenticated)
+{
+    <form method="post">
+        <div class="form-group">
+            <label asp-for="NewComment.Text" class="control-label"></label>
+            <textarea asp-for="NewComment.Text" class="form-control"></textarea>
+            <span asp-validation-for="NewComment.Text" class="text-danger"></span>
+        </div>
+        <input type="hidden" asp-for="NewComment.PostId" value="@Model.Post.Id" />
+        <div class="form-group">
+            <input type="submit" value="Add Comment" class="btn btn-primary" />
+        </div>
+    </form>
+} *@

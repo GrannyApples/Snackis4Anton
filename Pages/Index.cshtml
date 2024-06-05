@@ -1,0 +1,30 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<h2>Posts</h2>
+<div class="row row-cols-3 g-3">
+@foreach (var post in Model.Posts)
+{
+        <div class="col">
+            
+        <div class="card" >
+        <h3>@post.Title</h3>
+        @if (!string.IsNullOrEmpty(post.Image))
+        {
+            <img width="100" length="100" src="/images/@post.Image" alt="Post Image" style="max-width: 100%;" />
+        }
+        <p>@post.Text</p>
+        <a asp-page="/Posts/PostDetails" asp-route-id="@post.Id">Read more</a>
+        <p>By: <a asp-page="/Users/Details" asp-route-id="@post.UserId">@post.Author</a></p>
+            </div>
+    </div>
+}
+</div>
+@if (User.Identity.IsAuthenticated)
+{
+    <a asp-page="/CreatePost" class="btn btn-primary">Create New Post</a>
+}
+

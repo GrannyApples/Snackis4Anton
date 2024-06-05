@@ -1,0 +1,52 @@
+﻿@* @page "{id}"
+@model Snackis4Anton.Pages.PostDetailsModel
+@{
+    ViewData["Title"] = Model.Post.Title;
+}
+
+<h1>@Model.Post.Title</h1>
+<p>By: <a asp-page="/Users/Details" asp-route-id="@Model.Post.UserId">@Model.Post.Author</a></p>
+<p>@Model.Post.CreateDate</p>
+<p>@Model.Post.Text</p>
+
+@if (!string.IsNullOrEmpty(Model.Post.Image))
+{
+    <img src="@Model.Post.Image" alt="Post Image" />
+}
+
+<h2>Comments</h2>
+<ul>
+    @foreach (var comment in Model.Comments)
+    {
+        <li>
+            <p>@comment.Text</p>
+            <p>By: <a asp-page="/Users/Details" asp-route-id="@comment.UserId">@comment.Author</a> on @comment.CreateDate</p>
+        </li>
+    }
+</ul>
+
+<h3>Add a Comment</h3>
+<form method="post" asp-page-handler="Comment">
+    <div class="form-group">
+        <label asp-for="NewComment.Text" class="control-label"></label>
+        <textarea asp-for="NewComment.Text" class="form-control"></textarea>
+        <span asp-validation-for="NewComment.Text" class="text-danger"></span>
+    </div>
+    <input type="hidden" asp-for="NewComment.PostId" value="@Model.Post.Id" />
+    <div class="form-group">
+        <input type="submit" value="Add Comment" class="btn btn-primary" />
+    </div>
+</form>
+
+<h3>Send Direct Message</h3>
+<form method="post" asp-page-handler="SendDM">
+    <div class="form-group">
+        <label asp-for="Message.Text" class="control-label"></label>
+        <textarea asp-for="Message.Text" class="form-control"></textarea>
+        <span asp-validation-for="Message.Text" class="text-danger"></span>
+    </div>
+    <input type="hidden" asp-for="Message.ReceiverId" value="@Model.Post.UserId" />
+    <div class="form-group">
+        <input type="submit" value="Send DM" class="btn btn-primary" />
+    </div>
+</form> *@

@@ -1,0 +1,35 @@
+﻿@page
+@model Snackis4Anton.Pages.CreatePostModel
+@{
+    ViewData["Title"] = "Create Post";
+}
+
+<h2>Create a new post</h2>
+
+@if (Model.IsAdmin)
+{
+    <form method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <label asp-for="Post.Title" class="control-label"></label>
+            <input asp-for="Post.Title" class="form-control" />
+            <span asp-validation-for="Post.Title" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Post.Text" class="control-label"></label>
+            <textarea asp-for="Post.Text" class="form-control"></textarea>
+            <span asp-validation-for="Post.Text" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Image" class="control-label">Image</label>
+            <input type="file" asp-for="Image" class="form-control" />
+            <span asp-validation-for="Image" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Create" class="btn btn-primary" />
+        </div>
+    </form> 
+}
+else
+{
+    <p>You do not have permission to create a post.</p>
+}

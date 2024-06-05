@@ -1,0 +1,74 @@
+﻿@page
+@model Snackis4Anton.Pages.AdminModel
+<h2>Admin Page</h2>
+
+@if (!Model.IsAdmin)
+{
+    <p>You do not have permission to view this page.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Email</th>
+                <th>Admin</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model.Users)
+            {
+                <tr>
+                    <td>@user.Email</td>
+                    <td>@user.IsAdmin</td>
+                    <td>
+                        <form method="post" asp-page-handler="ToggleAdmin" asp-route-id="@user.Id" class="d-inline">
+                            <button type="submit" class="btn btn-primary">@((user.IsAdmin) ? "Revoke Admin" : "Make Admin")</button>
+                        </form>
+                    </td>
+                </tr>
+                <details>
+                    <summary>@user.Email's Posts and Comments</summary>
+                    <h4>Posts</h4>
+                    <ul>
+                        @foreach (var post in user.Posts)
+                        {
+                            
+                            <li>
+                                @post.Title
+                                <form method="post" asp-page-handler="ToggleReportedPost">
+                                    <input type="hidden" name="postId" value="@post.Id" />
+                                    <button type="submit" class="btn btn-sm @(post.IsReported ? "btn-danger" : "btn-success")">
+                                        @(post.IsReported ? "Unreport" : "Report")
+                                    </button>
+                                </form>
+                                <form method="post" asp-page-handler="DeletePost" asp-route-postId="@post.Id" class="d-inline">
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                </form>
+                            </li>
+                        }
+                    </ul>
+                    <h4>Comments</h4>
+                    <ul>
+                        @foreach (var comment in user.Comments)
+                        {
+                            <li>
+                                @comment.Text
+                                <form method="post" asp-page-handler="ToggleReportedComment">
+                                    <input type="hidden" name="commentId" value="@comment.Id" />
+                                    <button type="submit" class="btn btn-sm @(comment.IsReported ? "btn-danger" : "btn-success")">
+                                        @(comment.IsReported ? "Unreport" : "Report")
+                                    </button>
+                                </form>
+                                <form method="post" asp-page-handler="DeleteComment" asp-route-commentId="@comment.Id" class="d-inline">
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                </form>
+                            </li>
+                        }
+                    </ul>
+                </details>
+            }
+        </tbody>
+    </table>
+}

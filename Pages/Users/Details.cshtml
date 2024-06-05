@@ -1,0 +1,38 @@
+﻿@page "{id}"
+@model Snackis4Anton.Pages.Users.DetailsModel
+@{
+    ViewData["Title"] = "User Profile";
+}
+
+<h1>@Model.UserDetail.UserName's Profile</h1>
+
+<p><strong>Email:</strong> @Model.UserDetail.Email</p>
+
+
+<h2>Posts</h2>
+<ul>
+    @foreach (var post in Model.Posts)
+    {
+        <li>
+            <h2>@post.Title</h2>
+            <p>@post.Text</p>
+            <a asp-page="/Posts/PostDetails" asp-route-id="@post.Id">Read More</a>
+        </li>
+    }
+</ul>
+
+<h2>Comments</h2>
+<ul class="card m-1">
+    @foreach (var comment in Model.Comments)
+    {
+        <li>
+            <p>@comment.Text</p>
+            <a asp-page="/Posts/PostDetails" asp-route-id="@comment.PostId">View Post</a>
+        </li>
+    }
+</ul>
+
+@if (User.Identity.IsAuthenticated)
+{
+    <a asp-page="/Users/SendMessage" asp-route-receiverId="@Model.UserDetail.Id">Send Message</a>
+}
